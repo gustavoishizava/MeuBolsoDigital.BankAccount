@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.7"/>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.2"/>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0"/>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3"/>
+    <PackageReference Include="MeuBolsoDigital.Core" Version="1.0.0"/>
+    <PackageReference Include="MeuBolsoDigital.Application.Utils" Version="1.0.2"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MBD.BankAccounts.Infrastructure\MBD.BankAccounts.Infrastructure.csproj"/>
+    <ProjectReference Include="..\MBD.BankAccounts.Application\MBD.BankAccounts.Application.csproj"/>
+    <ProjectReference Include="..\MBD.BankAccounts.Domain\MBD.BankAccounts.Domain.csproj"/>
+  </ItemGroup>
+</Project>
