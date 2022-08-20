@@ -8,6 +8,7 @@ using MBD.BankAccounts.Domain.Interfaces.Repositories;
 using MBD.BankAccounts.Domain.Interfaces.Services;
 using MBD.BankAccounts.Domain.Services;
 using MBD.BankAccounts.Infrastructure;
+using MBD.BankAccounts.Infrastructure.Repositories;
 using MediatR;
 using MeuBolsoDigital.Core.Interfaces.Identity;
 using MeuBolsoDigital.Core.Interfaces.Repositories;
@@ -54,7 +55,7 @@ namespace MBD.BankAccounts.API.Configuration
 
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            // services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

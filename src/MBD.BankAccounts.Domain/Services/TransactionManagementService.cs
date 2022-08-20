@@ -31,7 +31,7 @@ namespace MBD.BankAccounts.Domain.Services
             else
                 account.UpdateTransaction(transactionId, createdAt, value);
 
-            _accountRepository.Update(account);
+            await _accountRepository.UpdateAsync(account);
 
             await _unitOfWork.CommitAsync();
         }

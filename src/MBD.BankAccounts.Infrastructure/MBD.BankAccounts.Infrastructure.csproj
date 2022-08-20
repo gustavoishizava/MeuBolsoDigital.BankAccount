@@ -3,7 +3,11 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="9.0.0"/>
-    <PackageReference Include="MeuBolsoDigital.Core" Version="1.0.1"/>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="MeuBolsoDigital.Core" Version="1.0.2" />
+    <PackageReference Include="Ishizava.MongoDB.Context" Version="1.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MBD.BankAccounts.Domain\MBD.BankAccounts.Domain.csproj" />
   </ItemGroup>
 </Project>

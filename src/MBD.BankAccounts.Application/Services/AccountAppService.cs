@@ -38,7 +38,7 @@ namespace MBD.BankAccounts.Application.Services
 
             var account = new Account(_loggedUser.UserId, request.Description, request.InitialBalance, request.Type);
 
-            _repository.Add(account);
+            await _repository.AddAsync(account);
             await _unitOfWork.CommitAsync();
 
             return Result<AccountResponse>.Success(_mapper.Map<AccountResponse>(account));
@@ -62,7 +62,7 @@ namespace MBD.BankAccounts.Application.Services
             else
                 account.Deactivate();
 
-            _repository.Update(account);
+            await _repository.UpdateAsync(account);
             await _unitOfWork.CommitAsync();
 
             return Result.Success();
@@ -88,7 +88,7 @@ namespace MBD.BankAccounts.Application.Services
             if (account == null)
                 return Result.Fail("Conta bancária inválida.");
 
-            _repository.Remove(account);
+            await _repository.RemoveAsync(account);
             await _unitOfWork.CommitAsync();
 
             return Result.Success();
