@@ -4,6 +4,7 @@ using DotNet.MongoDB.Context.Context;
 using DotNet.MongoDB.Context.Context.ModelConfiguration;
 using MBD.BankAccounts.Domain.Entities;
 using MBD.BankAccounts.Domain.Entities.Common;
+using MBD.BankAccounts.Infrastructure.Context.CustomSerializers;
 using MBD.BankAccounts.Infrastructure.Extensions;
 using MediatR;
 
