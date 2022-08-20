@@ -57,10 +57,10 @@ namespace MBD.BankAccounts.Infrastructure.Context
             });
         }
 
-        public override Task CommitAsync()
+        public override async Task CommitAsync()
         {
-            _mediator.DispatchDomainEventsAsync(this);
-            return base.CommitAsync();
+            await _mediator.DispatchDomainEventsAsync(this);
+            await base.CommitAsync();
         }
     }
 }

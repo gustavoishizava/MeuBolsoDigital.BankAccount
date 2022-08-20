@@ -3,22 +3,22 @@ using System.Threading.Tasks;
 using MBD.BankAccounts.Domain.Entities.Common;
 using MBD.BankAccounts.Infrastructure.Context;
 using MediatR;
+using MeuBolsoDigital.CrossCutting.Extensions;
 
 namespace MBD.BankAccounts.Infrastructure.Extensions
 {
     public static class MediatrExtensions
     {
-        public static Task DispatchDomainEventsAsync(this IMediator mediator, AccountContext context)
+        public static async Task DispatchDomainEventsAsync(this IMediator mediator, AccountContext context)
         {
-            var entities = context.ChangeTracker.Entries.Where(x => x.GetType() == typeof(BaseEntityWithEvent));
-            return Task.CompletedTask;
-            // var domainEvents = entities.SelectMany(x => x.Entity.Events).OrderBy(x => x.TimeStamp).ToList();
+            var values = context.ChangeTracker.Entries.Where(x => x.Value.GetType().BaseType == typeof(BaseEntityWithEvent)).Select(x => (BaseEntityWithEvent)x.Value);
+            var domainEvents = values.Where(x => !x.Events.IsNullOrEmpty())
+                                     .SelectMany(x => x.Events)
+                                     .OrderBy(x => x.TimeStamp)
+                                     .ToList();
+            var tasks = domainEvents.Select(x => mediator.Publish(x));
 
-            // entities.ToList().ForEach(x => x.Entity.ClearDomainEvents());
-
-            // var tasks = domainEvents.Select((domainEvent) => mediator.Publish(domainEvent));
-
-            // await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace MBD.BankAccounts.Application.DomainEvents
     {
         public Task Handle(DescriptionChangedDomainEvent notification, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

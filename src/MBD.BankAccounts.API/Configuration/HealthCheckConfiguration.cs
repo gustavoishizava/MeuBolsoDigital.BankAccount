@@ -8,6 +8,8 @@ namespace MBD.BankAccounts.API.Configuration
     {
         public static IServiceCollection AddHealthCheckConfiguration(this IServiceCollection services)
         {
+            services.AddHealthChecks();
+
             return services;
         }
 
