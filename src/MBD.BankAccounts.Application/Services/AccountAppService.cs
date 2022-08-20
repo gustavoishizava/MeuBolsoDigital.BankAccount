@@ -10,20 +10,21 @@ using MBD.BankAccounts.Domain.Entities.Common;
 using MBD.BankAccounts.Domain.Interfaces.Repositories;
 using MeuBolsoDigital.Application.Utils.Responses;
 using MeuBolsoDigital.Application.Utils.Responses.Interfaces;
+using MeuBolsoDigital.Core.Interfaces.Identity;
 using MeuBolsoDigital.Core.Interfaces.Repositories;
 
 namespace MBD.BankAccounts.Application.Services
 {
     public class AccountAppService : IAccountAppService
     {
-        private readonly IAspNetUser _aspNetUser;
+        private readonly ILoggedUser _loggedUser;
         private readonly IAccountRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AccountAppService(IAspNetUser aspNetUser, IAccountRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
+        public AccountAppService(ILoggedUser loggedUser, IAccountRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _aspNetUser = aspNetUser;
+            _loggedUser = loggedUser;
             _repository = repository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -35,7 +36,7 @@ namespace MBD.BankAccounts.Application.Services
             if (!validation.IsValid)
                 return Result<AccountResponse>.Fail(validation.ToString());
 
-            var account = new Account(_aspNetUser.UserId, request.Description, request.InitialBalance, request.Type);
+            var account = new Account(_loggedUser.UserId, request.Description, request.InitialBalance, request.Type);
 
             _repository.Add(account);
             await _unitOfWork.CommitAsync();
@@ -88,7 +89,7 @@ namespace MBD.BankAccounts.Application.Services
                 return Result.Fail("Conta bancária inválida.");
 
             _repository.Remove(account);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
 
             return Result.Success();
         }

@@ -28,7 +28,6 @@ namespace MBD.BankAccounts.API
             services.AddHealthCheckConfiguration();
             services.AddJwtConfiguration(Configuration);
             services.AddApiConfiguration(Configuration);
-            services.AddFluentValidationConfiguration();
             services.AddSwaggerConfiguration();
         }
 

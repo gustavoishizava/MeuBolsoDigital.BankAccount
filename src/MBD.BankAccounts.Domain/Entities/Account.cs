@@ -4,7 +4,6 @@ using System.Linq;
 using MBD.BankAccounts.Domain.Entities.Common;
 using MBD.BankAccounts.Domain.Enumerations;
 using MBD.BankAccounts.Domain.Events;
-using MBD.BankAccounts.Domain.Resources;
 using MeuBolsoDigital.Core.Assertions;
 using MeuBolsoDigital.Core.Exceptions;
 using MeuBolsoDigital.Core.Interfaces.Entities;

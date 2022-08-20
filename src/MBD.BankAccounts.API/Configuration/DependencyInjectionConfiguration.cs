@@ -1,4 +1,5 @@
 using System.Reflection;
+using MBD.BankAccounts.API.Identity;
 using MBD.BankAccounts.Application.DomainEvents;
 using MBD.BankAccounts.Application.Interfaces;
 using MBD.BankAccounts.Application.Services;
@@ -8,6 +9,7 @@ using MBD.BankAccounts.Domain.Interfaces.Services;
 using MBD.BankAccounts.Domain.Services;
 using MBD.BankAccounts.Infrastructure;
 using MediatR;
+using MeuBolsoDigital.Core.Interfaces.Identity;
 using MeuBolsoDigital.Core.Interfaces.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +31,7 @@ namespace MBD.BankAccounts.API.Configuration
                     .AddOutBoxTransaction();
 
             services.AddHttpContextAccessor();
-            services.AddScoped<IAspNetUser, AspNetUser>();
+            services.AddScoped<ILoggedUser, WebAppUser>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(Assembly.Load("MBD.BankAccounts.Application"));
 
@@ -52,7 +54,7 @@ namespace MBD.BankAccounts.API.Configuration
 
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IAccountRepository, AccountRepository>();
+            // services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

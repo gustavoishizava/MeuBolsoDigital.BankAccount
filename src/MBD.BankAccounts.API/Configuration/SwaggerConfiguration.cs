@@ -2,7 +2,6 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace MBD.BankAccounts.API.Configuration
 {
@@ -44,8 +43,6 @@ namespace MBD.BankAccounts.API.Configuration
                             Array.Empty<string>()
                         }
                     });
-
-                    c.AddFluentValidationRulesScoped();
                 });
 
             return services;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MeuBolsoDigital.Application.Utils.Responses.Interfaces;
+using MeuBolsoDigital.CrossCutting.Extensions;
 
 namespace MBD.BankAccounts.API.Models
 {

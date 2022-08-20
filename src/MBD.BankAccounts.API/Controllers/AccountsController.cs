@@ -6,6 +6,7 @@ using MBD.BankAccounts.API.Models;
 using MBD.BankAccounts.Application.Interfaces;
 using MBD.BankAccounts.Application.Request;
 using MBD.BankAccounts.Application.Response;
+using MeuBolsoDigital.CrossCutting.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
