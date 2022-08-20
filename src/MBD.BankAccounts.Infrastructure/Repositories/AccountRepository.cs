@@ -4,56 +4,60 @@ using System.Threading.Tasks;
 using MBD.BankAccounts.Domain.Entities;
 using MBD.BankAccounts.Domain.Interfaces.Repositories;
 using MBD.BankAccounts.Infrastructure.Context;
+using MeuBolsoDigital.Core.Interfaces.Identity;
+using MongoDB.Driver;
 
 namespace MBD.BankAccounts.Infrastructure.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
         private readonly AccountContext _context;
+        private readonly ILoggedUser _loggedUser;
 
-        public AccountRepository(AccountContext context)
+        public AccountRepository(AccountContext context, ILoggedUser loggedUser)
         {
             _context = context;
+            _loggedUser = loggedUser;
         }
 
-        public Task AddAsync(Account entity)
+        public async Task AddAsync(Account entity)
         {
-            throw new NotImplementedException();
+            await _context.Accounts.AddAsync(entity);
         }
 
-        public Task<IEnumerable<Account>> GetAllAsync()
+        public async Task<IEnumerable<Account>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Accounts.Collection.Find(x => x.TenantId == _loggedUser.UserId).ToListAsync();
         }
 
-        public Task<Account> GetByIdAsync(Guid id, bool ignoreGlobalFilter)
+        public async Task<Account> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Accounts.Collection.Find(x => x.Id == id && x.TenantId == _loggedUser.UserId).FirstOrDefaultAsync();
         }
 
-        public Task<Account> GetByIdAsync(Guid id)
+        public async Task<Account> GetByIdWithoutUserAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Accounts.Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public Task<Transaction> GetTransactionByIdAsync(Guid transactionId)
+        public async Task<Transaction> GetTransactionByIdAsync(Guid transactionId)
         {
-            throw new NotImplementedException();
+            return await _context.Transactions.Collection.Find(x => x.Id == transactionId).FirstOrDefaultAsync();
         }
 
-        public Task RemoveAsync(Account entity)
+        public async Task RemoveAsync(Account entity)
         {
-            throw new NotImplementedException();
+            await _context.Accounts.RemoveAsync(Builders<Account>.Filter.Where(x => x.Id == entity.Id), entity);
         }
 
-        public void RemoveTransaction(Transaction transaction)
+        public async Task RemoveTransactionAsync(Transaction transaction)
         {
-            throw new NotImplementedException();
+            await _context.Transactions.RemoveAsync(Builders<Transaction>.Filter.Where(x => x.Id == transaction.Id), transaction);
         }
 
-        public Task UpdateAsync(Account entity)
+        public async Task UpdateAsync(Account entity)
         {
-            throw new NotImplementedException();
+            await _context.Accounts.UpdateAsync(Builders<Account>.Filter.Where(x => x.Id == entity.Id), entity);
         }
     }
 }

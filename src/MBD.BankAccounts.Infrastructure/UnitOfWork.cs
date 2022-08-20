@@ -1,13 +1,23 @@
 using System.Threading.Tasks;
+using MBD.BankAccounts.Infrastructure.Context;
 using MeuBolsoDigital.Core.Interfaces.Repositories;
 
 namespace MBD.BankAccounts.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public Task<bool> CommitAsync()
+        private readonly AccountContext _context;
+
+        public UnitOfWork(AccountContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+            _context.StartTransaction();
+        }
+
+        public async Task<bool> CommitAsync()
+        {
+            await _context.CommitAsync();
+            return true;
         }
     }
 }

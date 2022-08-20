@@ -40,7 +40,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Services
             Transaction transaction;
 
             _mock.GetMock<IAccountRepository>()
-                .Setup(method => method.GetByIdAsync(It.IsAny<Guid>(), true))
+                .Setup(method => method.GetByIdWithoutUserAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(account);
 
             // Act
@@ -57,7 +57,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Services
             Assert.NotNull(transaction);
 
             _mock.GetMock<IAccountRepository>()
-                .Verify(method => method.GetByIdAsync(It.IsAny<Guid>(), true), Times.Once);
+                .Verify(method => method.GetByIdWithoutUserAsync(It.IsAny<Guid>()), Times.Once);
 
             _mock.GetMock<IUnitOfWork>()
                 .Verify(method => method.CommitAsync(), Times.Once);
@@ -68,7 +68,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Services
         {
             // Arrange
             _mock.GetMock<IAccountRepository>()
-                .Setup(method => method.GetByIdAsync(It.IsAny<Guid>(), true))
+                .Setup(method => method.GetByIdWithoutUserAsync(It.IsAny<Guid>()))
                 .ReturnsAsync((Account)null);
 
             // Act && Assert
@@ -81,7 +81,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Services
                     DateTime.Now));
 
             _mock.GetMock<IAccountRepository>()
-                .Verify(method => method.GetByIdAsync(It.IsAny<Guid>(), true), Times.Once);
+                .Verify(method => method.GetByIdWithoutUserAsync(It.IsAny<Guid>()), Times.Once);
 
             _mock.GetMock<IUnitOfWork>()
                 .Verify(method => method.CommitAsync(), Times.Never);
@@ -108,7 +108,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Services
                 .Verify(method => method.GetTransactionByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             _mock.GetMock<IAccountRepository>()
-                .Verify(method => method.RemoveTransaction(transaction), Times.Once);
+                .Verify(method => method.RemoveTransactionAsync(transaction), Times.Once);
 
             _mock.GetMock<IUnitOfWork>()
                 .Verify(method => method.CommitAsync(), Times.Once);
@@ -130,7 +130,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Services
                 .Verify(method => method.GetTransactionByIdAsync(It.IsAny<Guid>()), Times.Once);
 
             _mock.GetMock<IAccountRepository>()
-                .Verify(method => method.RemoveTransaction(It.IsAny<Transaction>()), Times.Never);
+                .Verify(method => method.RemoveTransactionAsync(It.IsAny<Transaction>()), Times.Never);
 
             _mock.GetMock<IUnitOfWork>()
                 .Verify(method => method.CommitAsync(), Times.Never);

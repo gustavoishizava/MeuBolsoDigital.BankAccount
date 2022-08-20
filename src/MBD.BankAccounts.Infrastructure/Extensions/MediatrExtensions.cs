@@ -8,10 +8,10 @@ namespace MBD.BankAccounts.Infrastructure.Extensions
 {
     public static class MediatrExtensions
     {
-        public static async Task DispatchDomainEventsAsync(this IMediator mediator, AccountContext context)
+        public static Task DispatchDomainEventsAsync(this IMediator mediator, AccountContext context)
         {
             var entities = context.ChangeTracker.Entries.Where(x => x.GetType() == typeof(BaseEntityWithEvent));
-
+            return Task.CompletedTask;
             // var domainEvents = entities.SelectMany(x => x.Entity.Events).OrderBy(x => x.TimeStamp).ToList();
 
             // entities.ToList().ForEach(x => x.Entity.ClearDomainEvents());

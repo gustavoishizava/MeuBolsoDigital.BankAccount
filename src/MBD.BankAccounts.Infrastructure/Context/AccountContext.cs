@@ -1,15 +1,21 @@
+using System.Threading.Tasks;
 using DotNet.MongoDB.Context.Configuration;
 using DotNet.MongoDB.Context.Context;
 using DotNet.MongoDB.Context.Context.ModelConfiguration;
 using MBD.BankAccounts.Domain.Entities;
 using MBD.BankAccounts.Domain.Entities.Common;
+using MBD.BankAccounts.Infrastructure.Extensions;
+using MediatR;
 
 namespace MBD.BankAccounts.Infrastructure.Context
 {
     public class AccountContext : DbContext
     {
-        public AccountContext(MongoDbContextOptions options) : base(options)
+        private readonly IMediator _mediator;
+
+        public AccountContext(MongoDbContextOptions options, IMediator mediator) : base(options)
         {
+            _mediator = mediator;
         }
 
         public DbSet<Account> Accounts { get; set; }
@@ -49,6 +55,12 @@ namespace MBD.BankAccounts.Infrastructure.Context
                 mapConfig.MapProperty(x => x.Value).SetElementName("value");
                 mapConfig.MapProperty(x => x.Type).SetElementName("type");
             });
+        }
+
+        public override Task CommitAsync()
+        {
+            _mediator.DispatchDomainEventsAsync(this);
+            return base.CommitAsync();
         }
     }
 }

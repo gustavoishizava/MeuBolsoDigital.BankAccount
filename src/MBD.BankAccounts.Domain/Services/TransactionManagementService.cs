@@ -21,7 +21,7 @@ namespace MBD.BankAccounts.Domain.Services
 
         public async Task AddTransactionToAccountAsync(Guid accountId, Guid transactionId, decimal value, TransactionType type, DateTime createdAt)
         {
-            var account = await _accountRepository.GetByIdAsync(accountId, true);
+            var account = await _accountRepository.GetByIdWithoutUserAsync(accountId);
             if (account == null)
                 throw new DomainException($"Nenhuma conta encontrada com o Id='{accountId}'.");
 
@@ -42,7 +42,7 @@ namespace MBD.BankAccounts.Domain.Services
             if (transaction == null)
                 return;
 
-            _accountRepository.RemoveTransaction(transaction);
+            await _accountRepository.RemoveTransactionAsync(transaction);
             await _unitOfWork.CommitAsync();
         }
 
