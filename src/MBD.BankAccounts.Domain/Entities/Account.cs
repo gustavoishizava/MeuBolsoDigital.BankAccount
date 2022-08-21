@@ -57,21 +57,26 @@ namespace MBD.BankAccounts.Domain.Entities
                 AddDomainEvent(new DescriptionChangedDomainEvent(Id, Description, description));
 
             Description = description;
+
+            SetUpdateDate();
         }
 
         public void SetType(AccountType type)
         {
             Type = type;
+            SetUpdateDate();
         }
 
         public void Activate()
         {
             Status = Status.Active;
+            SetUpdateDate();
         }
 
         public void Deactivate()
         {
             Status = Status.Inactive;
+            SetUpdateDate();
         }
 
         #endregion

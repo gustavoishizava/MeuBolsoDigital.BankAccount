@@ -14,8 +14,7 @@ namespace MBD.BankAccounts.Infrastructure.Context.CustomSerializers
 
         public override Status Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            var value = context.Reader.ReadString();
-            return Enum.Parse<Status>(value);
+            return Enum.Parse<Status>(context.Reader.ReadString());
         }
     }
 }

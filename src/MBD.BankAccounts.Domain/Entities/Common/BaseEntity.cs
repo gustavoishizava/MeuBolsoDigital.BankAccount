@@ -13,5 +13,7 @@ namespace MBD.BankAccounts.Domain.Entities.Common
             Id = Guid.NewGuid();
             CreatedAt = DateTime.Now;
         }
+
+        protected void SetUpdateDate() => UpdatedAt = DateTime.Now;
     }
 }

@@ -1,5 +1,6 @@
 using DotNet.MongoDB.Context.Extensions;
 using MBD.BankAccounts.Infrastructure.Context;
+using MBD.BankAccounts.Infrastructure.Context.CustomSerializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
@@ -15,6 +16,8 @@ namespace MBD.BankAccounts.API.Configuration
             {
                 options.ConfigureConnection(configuration.GetConnectionString("Default"), configuration["DatabaseName"]);
                 options.AddSerializer(new GuidSerializer(BsonType.String));
+                options.AddSerializer(new StatusSerializer());
+                options.AddSerializer(new AccountTypeSerializer());
             });
 
             return services;

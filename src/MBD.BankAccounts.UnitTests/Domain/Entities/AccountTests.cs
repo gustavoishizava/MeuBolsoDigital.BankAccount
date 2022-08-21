@@ -73,6 +73,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Entities
             Assert.Equal(newDescription, account.Description);
             Assert.Equal(newType, account.Type);
             Assert.Equal(newStatus, account.Status);
+            Assert.NotNull(account.UpdatedAt);
         }
 
         [Theory(DisplayName = "Atualizar descrição com valor inválido deve retornar DomainException.")]
