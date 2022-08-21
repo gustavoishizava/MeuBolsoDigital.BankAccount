@@ -25,7 +25,7 @@ namespace MBD.BankAccounts.Application.Request
 
                 RuleFor(x => x.InitialBalance)
                     .NotEmpty()
-                    .GreaterThan(0);
+                    .GreaterThanOrEqualTo(0);
 
                 RuleFor(x => x.Type)
                     .IsInEnum();

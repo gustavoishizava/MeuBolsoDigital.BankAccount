@@ -19,8 +19,10 @@
     <PackageReference Include="Bogus" Version="33.1.1"/>
     <PackageReference Include="coverlet.msbuild" Version="3.1.2"/>
     <PackageReference Include="MeuBolsoDigital.Core" Version="1.0.2"/>
+    <PackageReference Include="MeuBolsoDigital.Application.Utils" Version="1.0.2"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MBD.BankAccounts.Domain\MBD.BankAccounts.Domain.csproj"/>
+    <ProjectReference Include="..\MBD.BankAccounts.Application\MBD.BankAccounts.Application.csproj"/>
   </ItemGroup>
 </Project>
