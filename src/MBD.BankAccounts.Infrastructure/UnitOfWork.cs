@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MBD.BankAccounts.Infrastructure.Context;
 using MeuBolsoDigital.Core.Interfaces.Repositories;
 
 namespace MBD.BankAccounts.Infrastructure
 {
+    [ExcludeFromCodeCoverage]
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AccountContext _context;

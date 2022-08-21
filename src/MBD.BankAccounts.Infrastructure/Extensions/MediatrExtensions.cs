@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using MBD.BankAccounts.Domain.Entities.Common;
@@ -7,6 +8,7 @@ using MeuBolsoDigital.CrossCutting.Extensions;
 
 namespace MBD.BankAccounts.Infrastructure.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class MediatrExtensions
     {
         public static async Task DispatchDomainEventsAsync(this IMediator mediator, AccountContext context)
