@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MBD.BankAccounts.API.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public static class TokenConfiguration
     {
         public static IServiceCollection AddJwtConfiguration(this IServiceCollection services, IConfiguration configuration)

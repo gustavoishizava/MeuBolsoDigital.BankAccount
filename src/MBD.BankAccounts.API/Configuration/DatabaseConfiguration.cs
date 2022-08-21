@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DotNet.MongoDB.Context.Extensions;
 using MBD.BankAccounts.Infrastructure.Context;
 using MBD.BankAccounts.Infrastructure.Context.CustomSerializers;
@@ -8,6 +9,7 @@ using MongoDB.Bson.Serialization.Serializers;
 
 namespace MBD.BankAccounts.API.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public static class DatabaseConfiguration
     {
         public static IServiceCollection AddDbContextConfiguration(this IServiceCollection services, IConfiguration configuration)

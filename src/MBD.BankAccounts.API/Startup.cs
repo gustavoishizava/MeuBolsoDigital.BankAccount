@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using MBD.BankAccounts.API.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace MBD.BankAccounts.API
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IHostEnvironment hostEnvironment)

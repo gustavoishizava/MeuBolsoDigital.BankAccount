@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using MBD.BankAccounts.API.Identity;
 using MBD.BankAccounts.Application.DomainEvents;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MBD.BankAccounts.API.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public static class DependencyInjectionConfiguration
     {
         public static IServiceCollection AddDependencyInjection(this IServiceCollection services, IConfiguration configuration)
