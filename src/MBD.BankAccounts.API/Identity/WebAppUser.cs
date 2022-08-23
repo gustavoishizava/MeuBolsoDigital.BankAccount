@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using MeuBolsoDigital.Core.Interfaces.Identity;
 using Microsoft.AspNetCore.Http;
 
 namespace MBD.BankAccounts.API.Identity
 {
+    [ExcludeFromCodeCoverage]
     public class WebAppUser : ILoggedUser
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
