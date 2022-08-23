@@ -62,7 +62,7 @@ namespace MBD.BankAccounts.API.Controllers
             if (!result.Succeeded)
                 return BadRequest(new ErrorModel(result));
 
-            return Created($"/api/accounts/{result.Data}", result.Data);
+            return Created($"/api/accounts/{result.Data.Id}", result.Data);
         }
 
         [HttpPut]
