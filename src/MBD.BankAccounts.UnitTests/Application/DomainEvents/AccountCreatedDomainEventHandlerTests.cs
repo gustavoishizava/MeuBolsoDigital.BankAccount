@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using MBD.BankAccounts.Application.DomainEvents;
 using MBD.BankAccounts.Domain.Entities;
 using MBD.BankAccounts.Domain.Enumerations;
@@ -22,7 +23,7 @@ namespace MBD.BankAccounts.UnitTests.Application.DomainEvents
         }
 
         [Fact]
-        public async void Handler_ReturnSuccess()
+        public async Task Handler_ReturnSuccess()
         {
             // Arrange
             var account = new Account(Guid.NewGuid(), "account", 100, AccountType.CheckingAccount);

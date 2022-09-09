@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using MBD.BankAccounts.Application.DomainEvents;
 using MBD.BankAccounts.Domain.Events;
 using MeuBolsoDigital.IntegrationEventLog.Services;
@@ -20,7 +21,7 @@ namespace MBD.BankAccounts.UnitTests.Application.DomainEvents
         }
 
         [Fact]
-        public async void Handler_ReturnSuccess()
+        public async Task Handler_ReturnSuccess()
         {
             // Arrange
             var @event = new DescriptionChangedDomainEvent(Guid.NewGuid(), "oldDescription", "newDescription");
