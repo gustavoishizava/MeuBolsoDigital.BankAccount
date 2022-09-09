@@ -24,7 +24,6 @@ namespace MBD.BankAccounts.Application.Request
                     .MaximumLength(150);
 
                 RuleFor(x => x.InitialBalance)
-                    .NotEmpty()
                     .GreaterThanOrEqualTo(0);
 
                 RuleFor(x => x.Type)
