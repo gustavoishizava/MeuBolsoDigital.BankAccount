@@ -13,6 +13,7 @@ using MBD.BankAccounts.Infrastructure.Repositories;
 using MediatR;
 using MeuBolsoDigital.Core.Interfaces.Identity;
 using MeuBolsoDigital.Core.Interfaces.Repositories;
+using MeuBolsoDigital.IntegrationEventLog.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,7 +31,7 @@ namespace MBD.BankAccounts.API.Configuration
                     .AddConfigurations(configuration)
                     .AddMessageBus()
                     .AddDomainEvents()
-                    .AddIntegrationEventLogsService()
+                    .AddIntegrationEventLog<IntegrationEventLogRepository>()
                     .AddOutBoxTransaction();
 
             services.AddHttpContextAccessor();
@@ -83,11 +84,6 @@ namespace MBD.BankAccounts.API.Configuration
             services.AddScoped<INotificationHandler<DescriptionChangedDomainEvent>, DescriptionChangedDomainEventHandler>();
             services.AddScoped<INotificationHandler<AccountCreatedDomainEvent>, AccountCreatedDomainEventHandler>();
 
-            return services;
-        }
-
-        public static IServiceCollection AddIntegrationEventLogsService(this IServiceCollection services)
-        {
             return services;
         }
 

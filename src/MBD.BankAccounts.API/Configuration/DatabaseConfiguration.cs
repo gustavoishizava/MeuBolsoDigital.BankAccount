@@ -20,6 +20,7 @@ namespace MBD.BankAccounts.API.Configuration
                 options.AddSerializer(new GuidSerializer(BsonType.String));
                 options.AddSerializer(new StatusSerializer());
                 options.AddSerializer(new AccountTypeSerializer());
+                options.AddSerializer(new StateSerializer());
             });
 
             return services;

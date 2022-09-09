@@ -7,6 +7,7 @@
     <PackageReference Include="MeuBolsoDigital.Core" Version="1.0.2"/>
     <PackageReference Include="Ishizava.MongoDB.Context" Version="1.0.5"/>
     <PackageReference Include="MeuBolsoDigital.CrossCutting" Version="1.0.0"/>
+    <PackageReference Include="MeuBolsoDigital.IntegrationEventLog" Version="1.0.3"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MBD.BankAccounts.Domain\MBD.BankAccounts.Domain.csproj"/>

@@ -7,6 +7,7 @@ using MBD.BankAccounts.Domain.Entities;
 using MBD.BankAccounts.Domain.Entities.Common;
 using MBD.BankAccounts.Infrastructure.Extensions;
 using MediatR;
+using MeuBolsoDigital.IntegrationEventLog;
 
 namespace MBD.BankAccounts.Infrastructure.Context
 {
@@ -22,6 +23,7 @@ namespace MBD.BankAccounts.Infrastructure.Context
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<IntegrationEventLogEntry> IntegrationEventLogEntries { get; set; }
 
         protected override void OnModelConfiguring(ModelBuilder modelBuilder)
         {
@@ -56,6 +58,16 @@ namespace MBD.BankAccounts.Infrastructure.Context
                 mapConfig.MapProperty(x => x.CreatedAt).SetElementName("created_at");
                 mapConfig.MapProperty(x => x.Value).SetElementName("value");
                 mapConfig.MapProperty(x => x.Type).SetElementName("type");
+            });
+
+            modelBuilder.AddModelMap<IntegrationEventLogEntry>("integration_event_log_entries", mapConfig =>
+            {
+                mapConfig.MapIdProperty(x => x.Id);
+                mapConfig.MapProperty(x => x.CreatedAt).SetElementName("created_at");
+                mapConfig.MapProperty(x => x.UpdatedAt).SetElementName("updated_at");
+                mapConfig.MapProperty(x => x.EventTypeName).SetElementName("entity_type_name");
+                mapConfig.MapProperty(x => x.Content).SetElementName("content");
+                mapConfig.MapProperty(x => x.State).SetElementName("state");
             });
         }
 
