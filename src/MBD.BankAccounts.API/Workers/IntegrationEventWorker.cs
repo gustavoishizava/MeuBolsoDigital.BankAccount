@@ -32,6 +32,8 @@ namespace MBD.BankAccounts.API.Workers
         {
             _logger.LogInformation($"{GetType().Name} started.");
 
+            SetupExchange(stoppingToken);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 _rabbitMqConnection.TryConnect(stoppingToken);
@@ -58,8 +60,10 @@ namespace MBD.BankAccounts.API.Workers
 
         #region RabbitMQ
 
-        private void SetupExchange()
+        private void SetupExchange(CancellationToken cancellationToken)
         {
+            _rabbitMqConnection.TryConnect(cancellationToken);
+
             _rabbitMqConnection.Channel.ExchangeDeclare(
                 exchange: _publicationTopic,
                 type: ExchangeType.Topic,
