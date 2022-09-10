@@ -1,11 +1,15 @@
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MeuBolsoDigital.CrossCutting.Extensions;
 using MeuBolsoDigital.IntegrationEventLog.Services;
+using MeuBolsoDigital.RabbitMQ;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 
 namespace MBD.BankAccounts.API.Workers
 {
@@ -13,11 +17,15 @@ namespace MBD.BankAccounts.API.Workers
     {
         private readonly ILogger<IntegrationEventWorker> _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IRabbitMqConnection _rabbitMqConnection;
+        private readonly string _publicationTopic;
 
-        public IntegrationEventWorker(ILogger<IntegrationEventWorker> logger, IServiceProvider serviceProvider)
+        public IntegrationEventWorker(ILogger<IntegrationEventWorker> logger, IServiceProvider serviceProvider, IRabbitMqConnection rabbitMqConnection, IConfiguration configuration)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
+            _rabbitMqConnection = rabbitMqConnection;
+            _publicationTopic = configuration["RabbitMqConfiguration:PublicationTopic"];
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,6 +34,7 @@ namespace MBD.BankAccounts.API.Workers
 
             while (!stoppingToken.IsCancellationRequested)
             {
+                _rabbitMqConnection.TryConnect(stoppingToken);
                 await ProcessIntegrationEventsAsync();
                 await Task.Delay(5000);
             }
@@ -42,9 +51,36 @@ namespace MBD.BankAccounts.API.Workers
 
             foreach (var integrationEventLogEntry in integrationEventLogs)
             {
-                // TODO: PUBLICAR NO RABBITMQ
+                PublishMessage(integrationEventLogEntry.Content, integrationEventLogEntry.EventTypeName);
                 await integrationEventLogService.SetEventToPublishedAsync(integrationEventLogEntry);
             }
         }
+
+        #region RabbitMQ
+
+        private void SetupExchange()
+        {
+            _rabbitMqConnection.Channel.ExchangeDeclare(
+                exchange: _publicationTopic,
+                type: ExchangeType.Topic,
+                durable: true,
+                autoDelete: false,
+                arguments: null);
+        }
+
+        private void PublishMessage(string content, string routingKey)
+        {
+            var messageBytes = Encoding.UTF8.GetBytes(content);
+
+            _rabbitMqConnection.Channel.BasicPublish(
+                exchange: _publicationTopic,
+                routingKey: routingKey,
+                basicProperties: null,
+                body: messageBytes);
+
+            _logger.LogInformation("Published message.");
+        }
+
+        #endregion
     }
 }

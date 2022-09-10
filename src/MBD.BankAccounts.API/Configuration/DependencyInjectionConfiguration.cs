@@ -15,6 +15,7 @@ using MediatR;
 using MeuBolsoDigital.Core.Interfaces.Identity;
 using MeuBolsoDigital.Core.Interfaces.Repositories;
 using MeuBolsoDigital.IntegrationEventLog.Extensions;
+using MeuBolsoDigital.RabbitMQ.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,7 +34,8 @@ namespace MBD.BankAccounts.API.Configuration
                     .AddMessageBus()
                     .AddDomainEvents()
                     .AddIntegrationEventLog<IntegrationEventLogRepository>()
-                    .AddOutBoxTransaction();
+                    .AddOutBoxTransaction()
+                    .AddRabbitMqConnection(configuration);
 
             services.AddHttpContextAccessor();
             services.AddScoped<ILoggedUser, WebAppUser>();
