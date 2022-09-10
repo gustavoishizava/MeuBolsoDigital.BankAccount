@@ -12,7 +12,7 @@
     <PackageReference Include="MeuBolsoDigital.Core" Version="1.0.2"/>
     <PackageReference Include="MeuBolsoDigital.Application.Utils" Version="1.0.2"/>
     <PackageReference Include="MeuBolsoDigital.CrossCutting" Version="1.0.0"/>
-    <PackageReference Include="MeuBolsoDigital.RabbitMQ" Version="1.0.2"/>
+    <PackageReference Include="MeuBolsoDigital.RabbitMQ" Version="1.0.7"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MBD.BankAccounts.Infrastructure\MBD.BankAccounts.Infrastructure.csproj"/>
