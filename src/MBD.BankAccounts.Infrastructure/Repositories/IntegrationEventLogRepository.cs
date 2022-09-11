@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MBD.BankAccounts.Infrastructure.Context;
 using MeuBolsoDigital.IntegrationEventLog;
@@ -7,6 +8,7 @@ using MongoDB.Driver;
 
 namespace MBD.BankAccounts.Infrastructure.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class IntegrationEventLogRepository : IIntegrationEventLogRepository
     {
         private readonly AccountContext _context;

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,21 +29,19 @@ namespace MBD.BankAccounts.API.Workers
             _publicationTopic = configuration["RabbitMqConfiguration:PublicationTopic"];
         }
 
+        [ExcludeFromCodeCoverage]
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation($"{GetType().Name} started.");
 
-            SetupExchange(stoppingToken);
-
             while (!stoppingToken.IsCancellationRequested)
             {
-                _rabbitMqConnection.TryConnect(stoppingToken);
-                await ProcessIntegrationEventsAsync();
+                await ProcessIntegrationEventsAsync(stoppingToken);
                 await Task.Delay(5000);
             }
         }
 
-        protected async Task ProcessIntegrationEventsAsync()
+        protected async Task ProcessIntegrationEventsAsync(CancellationToken cancellationToken)
         {
             using var scope = _serviceProvider.CreateScope();
             var integrationEventLogService = scope.ServiceProvider.GetService<IIntegrationEventLogService>();
@@ -51,9 +50,11 @@ namespace MBD.BankAccounts.API.Workers
             if (integrationEventLogs.IsNullOrEmpty())
                 return;
 
+            SetupExchange(cancellationToken);
+
             foreach (var integrationEventLogEntry in integrationEventLogs)
             {
-                PublishMessage(integrationEventLogEntry.Content, integrationEventLogEntry.EventTypeName);
+                PublishMessage(integrationEventLogEntry.Content, integrationEventLogEntry.EventTypeName, cancellationToken);
                 await integrationEventLogService.SetEventToPublishedAsync(integrationEventLogEntry);
             }
         }
@@ -72,8 +73,10 @@ namespace MBD.BankAccounts.API.Workers
                 arguments: null);
         }
 
-        private void PublishMessage(string content, string routingKey)
+        private void PublishMessage(string content, string routingKey, CancellationToken cancellationToken)
         {
+            _rabbitMqConnection.TryConnect(cancellationToken);
+
             var messageBytes = Encoding.UTF8.GetBytes(content);
 
             _rabbitMqConnection.Channel.BasicPublish(
