@@ -11,12 +11,12 @@ namespace MBD.BankAccounts.Infrastructure.Context.CustomSerializers
     {
         public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, Money value)
         {
-            context.Writer.WriteString(value.Value.ToString());
+            context.Writer.WriteDecimal128(value.Value);
         }
 
         public override Money Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            return new Money(Convert.ToDecimal(context.Reader.ReadString()));
+            return new Money(Convert.ToDecimal(context.Reader.ReadDecimal128()));
         }
     }
 }
