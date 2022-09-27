@@ -29,7 +29,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Entities
             Transaction transaction = null;
             var transactionId = Guid.NewGuid();
             var date = DateTime.Now.AddDays(new Random().Next(1, 100));
-            var balance = _validAccount.InitialBalance + (type == TransactionType.Income ? value : value * -1);
+            var balance = _validAccount.InitialBalance.Value + (type == TransactionType.Income ? value : value * -1);
 
             // Act
             _validAccount.AddTransaction(transactionId, date, value, type);
@@ -40,7 +40,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Entities
             Assert.Equal(transactionId, transaction.Id);
             Assert.Equal(_validAccount.Id, transaction.AccountId);
             Assert.Equal(date, transaction.CreatedAt);
-            Assert.Equal(value, transaction.Value);
+            Assert.Equal(value, transaction.Value.Value);
             Assert.Equal(type, transaction.Type);
             Assert.Equal(balance, _validAccount.Balance);
         }
@@ -66,7 +66,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Entities
 
             // Act && Assert
             Assert.Throws<DomainException>(() =>
-                _validAccount.AddTransaction(transaction.Id, transaction.CreatedAt, transaction.Value, transaction.Type));
+                _validAccount.AddTransaction(transaction.Id, transaction.CreatedAt, transaction.Value.Value, transaction.Type));
         }
 
         [Fact(DisplayName = "Atualizar uma transação existente deve retornar sucesso.")]
@@ -85,7 +85,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Entities
             transaction = _validAccount.GetTransaction(transactionId);
 
             // Assert
-            Assert.Equal(newValue, transaction.Value);
+            Assert.Equal(newValue, transaction.Value.Value);
             Assert.Equal(newDate, transaction.CreatedAt);
         }
 

@@ -21,6 +21,7 @@ namespace MBD.BankAccounts.API.Configuration
                 options.AddSerializer(new StatusSerializer());
                 options.AddSerializer(new AccountTypeSerializer());
                 options.AddSerializer(new StateSerializer());
+                options.AddSerializer(new MoneySerializer());
             });
 
             return services;

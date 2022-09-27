@@ -154,7 +154,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Services
             await _service.SetTransactionValue(transactionId, newTransactionValue);
 
             // Assert
-            Assert.Equal(newTransactionValue, transaction.Value);
+            Assert.Equal(newTransactionValue, transaction.Value.Value);
 
             _mock.GetMock<IAccountRepository>()
                 .Verify(method => method.GetTransactionByIdAsync(It.IsAny<Guid>()), Times.Once);

@@ -210,7 +210,7 @@ namespace MBD.BankAccounts.UnitTests.Application.Services
             Assert.Null(result.Message);
             Assert.NotNull(result.Data);
             Assert.Equal(account.Description, result.Data.Description);
-            Assert.Equal(account.InitialBalance, result.Data.Balance);
+            Assert.Equal(account.InitialBalance.Value, result.Data.Balance);
             Assert.Equal(account.Type, result.Data.Type);
             repositoryMock.Verify(x => x.GetByIdAsync(account.Id), Times.Once);
         }

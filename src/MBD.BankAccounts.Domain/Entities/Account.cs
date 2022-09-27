@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MBD.BankAccounts.Domain.Entities.Common;
+using MBD.BankAccounts.Domain.Entities.ValueObjects;
 using MBD.BankAccounts.Domain.Enumerations;
 using MBD.BankAccounts.Domain.Events;
 using MeuBolsoDigital.Core.Assertions;
@@ -16,26 +17,25 @@ namespace MBD.BankAccounts.Domain.Entities
 
         public Guid TenantId { get; private set; }
         public string Description { get; private set; }
-        public decimal InitialBalance { get; private set; }
+        public Money InitialBalance { get; private init; }
         public AccountType Type { get; private set; }
         public Status Status { get; private set; }
 
         #region Navigation
 
-        public decimal Balance => InitialBalance + _transactions.Sum(x => x.Type == TransactionType.Income ? x.Value : x.Value * -1);
+        public decimal Balance => InitialBalance.Value + _transactions.Sum(x => x.Type == TransactionType.Income ? x.Value.Value : x.Value.Value * -1);
         public IReadOnlyList<Transaction> Transactions => _transactions.AsReadOnly();
 
         #endregion
 
         public Account(Guid tenantId, string description, decimal initialBalance, AccountType type)
         {
-            DomainAssertions.IsGreaterOrEqualsThan(initialBalance, 0, "O saldo inicial não pode ser inferiror a R$0,00.");
             DomainAssertions.IsNotNullOrEmpty(description, "A descrição deve ser informada.");
             DomainAssertions.HasMaxLength(description, 150, "A descrição deve conter no máximo 150 caracteres.");
 
             TenantId = tenantId;
             Description = description;
-            InitialBalance = initialBalance;
+            InitialBalance = new Money(initialBalance);
             SetType(type);
             Activate();
 

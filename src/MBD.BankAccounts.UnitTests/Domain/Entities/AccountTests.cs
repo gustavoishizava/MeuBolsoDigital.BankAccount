@@ -48,7 +48,7 @@ namespace MBD.BankAccounts.UnitTests.Domain.Entities
             Assert.NotNull(account);
             Assert.Equal(tenantId, account.TenantId);
             Assert.Equal(description, account.Description);
-            Assert.Equal(initialBalance, account.InitialBalance);
+            Assert.Equal(initialBalance, account.InitialBalance.Value);
             Assert.Equal(AccountType.CheckingAccount, account.Type);
             Assert.Equal(Status.Active, account.Status);
         }
