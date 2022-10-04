@@ -31,7 +31,13 @@ namespace MBD.BankAccounts.Infrastructure.Repositories
 
         public async Task<IEnumerable<Account>> GetAllAsync()
         {
-            return await _context.Accounts.Collection.Find(x => x.TenantId == _loggedUser.UserId).ToListAsync();
+            return await _context.Accounts.Collection.Aggregate<Account>()
+                                                    .Match(x => x.TenantId == _loggedUser.UserId)
+                                                    .Lookup<Transaction, Account>(
+                                                        foreignCollectionName: "transactions",
+                                                        localField: "_id",
+                                                        foreignField: "account_id",
+                                                        @as: "_transactions").ToListAsync();
         }
 
         public async Task<Account> GetByIdAsync(Guid id)
