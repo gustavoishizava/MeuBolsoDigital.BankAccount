@@ -110,6 +110,15 @@ namespace MBD.BankAccounts.Domain.Entities
             transaction.SetDate(createdAt);
         }
 
+        public void RemoveTransaction(Guid transactionId)
+        {
+            var transaction = GetTransaction(transactionId);
+            if (transaction is null)
+                throw new DomainException("Transação não encontrada.");
+
+            _transactions.Remove(transaction);
+        }
+
         #endregion
     }
 }

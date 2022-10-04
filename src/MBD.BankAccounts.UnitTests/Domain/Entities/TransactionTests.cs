@@ -95,5 +95,30 @@ namespace MBD.BankAccounts.UnitTests.Domain.Entities
             // Arrange && Act && Assert
             Assert.Throws<DomainException>(() => _validAccount.UpdateTransaction(Guid.NewGuid(), DateTime.Now, 10));
         }
+
+        [Fact]
+        public void NotFoundTransaction_RemoveTransaction_ReturnDomainException()
+        {
+            // Arrange && Act && Assert
+            Assert.Throws<DomainException>(() => _validAccount.RemoveTransaction(Guid.NewGuid()));
+        }
+
+        [Fact]
+        public void ExistsTransaction_RemoveTransaction_ReturnSuccess()
+        {
+            // Arrange
+            var transactionId = Guid.NewGuid();
+            var newValue = _faker.Finance.Amount(100, 1000);
+            var newDate = DateTime.Now.AddDays(_faker.Random.Int(5, 10));
+
+            _validAccount.AddTransaction(transactionId, DateTime.Now, _faker.Finance.Amount(10, 50), TransactionType.Income);
+
+            // Act
+            _validAccount.RemoveTransaction(transactionId);
+
+            // Assert
+            Assert.Null(_validAccount.GetTransaction(transactionId));
+            Assert.Empty(_validAccount.Transactions);
+        }
     }
 }
