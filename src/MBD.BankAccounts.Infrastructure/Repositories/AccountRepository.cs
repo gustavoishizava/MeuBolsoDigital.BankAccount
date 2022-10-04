@@ -9,9 +9,11 @@ using MBD.BankAccounts.Infrastructure.Context;
 using MeuBolsoDigital.Core.Interfaces.Identity;
 using MeuBolsoDigital.CrossCutting.Extensions;
 using MongoDB.Driver;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MBD.BankAccounts.Infrastructure.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class AccountRepository : IAccountRepository
     {
         private readonly AccountContext _context;
