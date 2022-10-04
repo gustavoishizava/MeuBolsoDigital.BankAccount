@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace MBD.BankAccounts.API.Workers
 {
+    [ExcludeFromCodeCoverage]
     public static class RabbitMqConstants
     {
         public const string TRANSACTION_PAID = "TOPIC/transactions.updated.paid";

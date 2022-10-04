@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using MeuBolsoDigital.RabbitMQ;
@@ -10,6 +11,7 @@ using RabbitMQ.Client.Events;
 
 namespace MBD.BankAccounts.API.Workers
 {
+    [ExcludeFromCodeCoverage]
     public class RabbitMqWorker : BackgroundService
     {
         private readonly ILogger<RabbitMqWorker> _logger;

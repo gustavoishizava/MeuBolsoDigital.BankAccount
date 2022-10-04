@@ -31,7 +31,6 @@ namespace MBD.BankAccounts.API.Configuration
                     .AddRepositories()
                     .AddConsumers()
                     .AddConfigurations(configuration)
-                    .AddMessageBus()
                     .AddDomainEvents()
                     .AddIntegrationEventLog<IntegrationEventLogRepository>()
                     .AddOutBoxTransaction()
@@ -69,15 +68,12 @@ namespace MBD.BankAccounts.API.Configuration
 
         public static IServiceCollection AddConsumers(this IServiceCollection services)
         {
+            services.AddHostedService<RabbitMqWorker>();
+
             return services;
         }
 
         public static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
-        {
-            return services;
-        }
-
-        public static IServiceCollection AddMessageBus(this IServiceCollection services)
         {
             return services;
         }
