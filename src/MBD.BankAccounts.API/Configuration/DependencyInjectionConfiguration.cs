@@ -47,6 +47,7 @@ namespace MBD.BankAccounts.API.Configuration
         public static IServiceCollection AddDomaindServices(this IServiceCollection services)
         {
             services.AddScoped<ITransactionManagementService, TransactionManagementService>();
+            services.AddScoped<ICreateOrUpdateTransactionService, CreateOrUpdateTransactionService>();
 
             return services;
         }
