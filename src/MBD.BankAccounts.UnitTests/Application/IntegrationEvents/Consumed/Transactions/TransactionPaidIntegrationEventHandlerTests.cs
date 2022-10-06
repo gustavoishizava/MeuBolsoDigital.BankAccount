@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.Paid;
 using MBD.BankAccounts.Domain.Enumerations;
 using MBD.BankAccounts.Domain.Interfaces.Services;
@@ -21,7 +22,7 @@ namespace MBD.BankAccounts.UnitTests.Application.IntegrationEvents.Consumed.Tran
         }
 
         [Fact]
-        public async void Handle_ReturnSuccess()
+        public async Task Handle_ReturnSuccess()
         {
             // Arrange
             var @event = new TransactionPaidIntegrationEvent

@@ -4,6 +4,7 @@ using MBD.BankAccounts.API.Identity;
 using MBD.BankAccounts.API.Workers;
 using MBD.BankAccounts.Application.DomainEvents;
 using MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.Paid;
+using MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.UndoPayment;
 using MBD.BankAccounts.Application.Interfaces;
 using MBD.BankAccounts.Application.Services;
 using MBD.BankAccounts.Domain.Events;
@@ -97,6 +98,7 @@ namespace MBD.BankAccounts.API.Configuration
         public static IServiceCollection AddIntegrationEvents(this IServiceCollection services)
         {
             services.AddScoped<INotificationHandler<TransactionPaidIntegrationEvent>, TransactionPaidIntegrationEventHandler>();
+            services.AddScoped<INotificationHandler<TransactionUndoPaymentIntegrationEvent>, TransactionUndoPaymentIntegrationEventHandler>();
 
             return services;
         }
