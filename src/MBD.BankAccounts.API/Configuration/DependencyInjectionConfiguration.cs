@@ -3,6 +3,7 @@ using System.Reflection;
 using MBD.BankAccounts.API.Identity;
 using MBD.BankAccounts.API.Workers;
 using MBD.BankAccounts.Application.DomainEvents;
+using MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.Paid;
 using MBD.BankAccounts.Application.Interfaces;
 using MBD.BankAccounts.Application.Services;
 using MBD.BankAccounts.Domain.Events;
@@ -46,7 +47,6 @@ namespace MBD.BankAccounts.API.Configuration
 
         public static IServiceCollection AddDomaindServices(this IServiceCollection services)
         {
-            services.AddScoped<ITransactionManagementService, TransactionManagementService>();
             services.AddScoped<ICreateOrUpdateTransactionService, CreateOrUpdateTransactionService>();
 
             return services;
@@ -90,6 +90,13 @@ namespace MBD.BankAccounts.API.Configuration
         public static IServiceCollection AddOutBoxTransaction(this IServiceCollection services)
         {
             services.AddHostedService<IntegrationEventWorker>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddIntegrationEvents(this IServiceCollection services)
+        {
+            services.AddScoped<INotificationHandler<TransactionPaidIntegrationEvent>, TransactionPaidIntegrationEventHandler>();
 
             return services;
         }

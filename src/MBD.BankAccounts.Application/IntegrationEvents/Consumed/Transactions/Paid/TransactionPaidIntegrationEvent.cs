@@ -1,8 +1,9 @@
 using System;
+using MediatR;
 
-namespace MBD.BankAccounts.Application.IntegrationEvents
+namespace MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.Paid
 {
-    public class TransactionPaidIntegrationEvent
+    public class TransactionPaidIntegrationEvent : INotification
     {
         public Guid Id { get; init; }
         public Guid BankAccountId { get; init; }
