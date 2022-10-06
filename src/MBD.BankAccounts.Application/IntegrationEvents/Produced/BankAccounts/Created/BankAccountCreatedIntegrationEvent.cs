@@ -2,7 +2,7 @@ using System;
 using MBD.BankAccounts.Domain.Enumerations;
 using MediatR;
 
-namespace MBD.BankAccounts.Application.IntegrationEvents
+namespace MBD.BankAccounts.Application.IntegrationEvents.Produced.BankAccounts.Created
 {
     public class BankAccountCreatedIntegrationEvent : INotification
     {

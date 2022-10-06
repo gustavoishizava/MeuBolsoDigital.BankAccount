@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MBD.BankAccounts.Application.IntegrationEvents.Produced.BankAccounts.Created;
 using MBD.BankAccounts.Domain.Events;
 using MediatR;
 using MeuBolsoDigital.IntegrationEventLog.Services;
@@ -17,7 +18,12 @@ namespace MBD.BankAccounts.Application.DomainEvents
 
         public async Task Handle(AccountCreatedDomainEvent notification, CancellationToken cancellationToken)
         {
-            await _service.CreateEventAsync<AccountCreatedDomainEvent>(notification, "created");
+            var @event = new BankAccountCreatedIntegrationEvent(notification.Id,
+                                                                notification.TenantId,
+                                                                notification.Description,
+                                                                notification.Type);
+
+            await _service.CreateEventAsync<BankAccountCreatedIntegrationEvent>(@event, "created");
         }
     }
 }

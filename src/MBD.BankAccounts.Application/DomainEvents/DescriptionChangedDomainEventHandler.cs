@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MBD.BankAccounts.Application.IntegrationEvents.Produced.BankAccounts.DescriptionChanged;
 using MBD.BankAccounts.Domain.Events;
 using MediatR;
 using MeuBolsoDigital.IntegrationEventLog.Services;
@@ -17,7 +18,11 @@ namespace MBD.BankAccounts.Application.DomainEvents
 
         public async Task Handle(DescriptionChangedDomainEvent notification, CancellationToken cancellationToken)
         {
-            await _service.CreateEventAsync<DescriptionChangedDomainEvent>(notification, "updated.description");
+            var @event = new BankAccountDescriptionChangedIntegrationEvent(notification.Id,
+                                                                           notification.OldDescription,
+                                                                           notification.NewDescription);
+
+            await _service.CreateEventAsync<BankAccountDescriptionChangedIntegrationEvent>(@event, "updated.description");
         }
     }
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace MBD.BankAccounts.Application.IntegrationEvents
+namespace MBD.BankAccounts.Application.IntegrationEvents.Produced.BankAccounts.DescriptionChanged
 {
     public class BankAccountDescriptionChangedIntegrationEvent
     {
