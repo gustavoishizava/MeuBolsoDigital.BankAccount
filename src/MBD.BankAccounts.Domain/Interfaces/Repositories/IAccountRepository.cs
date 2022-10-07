@@ -12,5 +12,6 @@ namespace MBD.BankAccounts.Domain.Interfaces.Repositories
         Task<Account> GetByIdWithoutUserAsync(Guid id);
         Task<Transaction> GetTransactionByIdAsync(Guid transactionId);
         Task RemoveTransactionAsync(Transaction transaction);
+        Task UpdateTransactionAsync(Transaction transaction);
     }
 }

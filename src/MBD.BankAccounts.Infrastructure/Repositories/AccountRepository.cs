@@ -86,6 +86,11 @@ namespace MBD.BankAccounts.Infrastructure.Repositories
             await AddOrUpdateTransactionsAsync(entity.Transactions.ToList());
         }
 
+        public async Task UpdateTransactionAsync(Transaction transaction)
+        {
+            await _context.Transactions.UpdateAsync(Builders<Transaction>.Filter.Where(x => x.Id == transaction.Id), transaction);
+        }
+
         private async Task AddOrUpdateTransactionsAsync(List<Transaction> transactions)
         {
             if (transactions.IsNullOrEmpty())
