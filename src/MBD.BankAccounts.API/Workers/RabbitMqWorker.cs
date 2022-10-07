@@ -2,6 +2,11 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.Paid;
+using MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.UndoPayment;
+using MBD.BankAccounts.Application.IntegrationEvents.Consumed.Transactions.ValueChanged;
+using MediatR;
+using MeuBolsoDigital.CrossCutting.Extensions;
 using MeuBolsoDigital.RabbitMQ;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,33 +77,37 @@ namespace MBD.BankAccounts.API.Workers
                                                   arguments: null);
         }
 
-        private Task<bool> ProcessMessageAsync(BasicDeliverEventArgs args)
+        private async Task<bool> ProcessMessageAsync(BasicDeliverEventArgs args)
         {
             try
             {
                 using var scope = _serviceProvider.CreateScope();
+                var mediator = scope.ServiceProvider.GetService<IMediator>();
 
                 var filter = $"{args.Exchange}.{args.RoutingKey}";
 
                 switch (filter)
                 {
                     case RabbitMqConstants.TRANSACTION_PAID:
-                        return Task.FromResult(true);
+                        await mediator.Publish(args.Body.Deserialize<TransactionPaidIntegrationEvent>());
+                        return true;
 
                     case RabbitMqConstants.TRANSACTION_UNDO_PAYMENT:
-                        return Task.FromResult(true);
+                        await mediator.Publish(args.Body.Deserialize<TransactionUndoPaymentIntegrationEvent>());
+                        return true;
 
                     case RabbitMqConstants.TRANSACTION_VALUE_CHANGED:
-                        return Task.FromResult(true);
+                        await mediator.Publish(args.Body.Deserialize<TransactionValueChangedIntegrationEvent>());
+                        return true;
 
                     default:
-                        return Task.FromResult(true);
+                        return true;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"{GetType().Name} error.");
-                return Task.FromResult(false);
+                return false;
             }
         }
     }
