@@ -37,7 +37,8 @@ namespace MBD.BankAccounts.API.Configuration
                     .AddDomainEvents()
                     .AddIntegrationEventLog<IntegrationEventLogRepository>()
                     .AddOutBoxTransaction()
-                    .AddRabbitMqConnection(configuration);
+                    .AddRabbitMqConnection(configuration)
+                    .AddIntegrationEvents();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ILoggedUser, WebAppUser>();
@@ -50,6 +51,7 @@ namespace MBD.BankAccounts.API.Configuration
         public static IServiceCollection AddDomaindServices(this IServiceCollection services)
         {
             services.AddScoped<ICreateOrUpdateTransactionService, CreateOrUpdateTransactionService>();
+            services.AddScoped<IUpdateTransactionValueService, UpdateTransactionValueService>();
 
             return services;
         }
