@@ -1,7 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using DotNet.MongoDB.Context.Extensions;
+using MBD.BankAccounts.Domain.Entities.Common;
+using MBD.BankAccounts.Domain.Enumerations;
 using MBD.BankAccounts.Infrastructure.Context;
 using MBD.BankAccounts.Infrastructure.Context.CustomSerializers;
+using MeuBolsoDigital.IntegrationEventLog;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
@@ -18,10 +21,11 @@ namespace MBD.BankAccounts.API.Configuration
             {
                 options.ConfigureConnection(configuration.GetConnectionString("Default"), configuration["DatabaseName"]);
                 options.AddSerializer(new GuidSerializer(BsonType.String));
-                options.AddSerializer(new StatusSerializer());
-                options.AddSerializer(new AccountTypeSerializer());
-                options.AddSerializer(new StateSerializer());
                 options.AddSerializer(new MoneySerializer());
+                options.AddSerializer(new EnumSerializer<TransactionType>(BsonType.String));
+                options.AddSerializer(new EnumSerializer<EventState>(BsonType.String));
+                options.AddSerializer(new EnumSerializer<AccountType>(BsonType.String));
+                options.AddSerializer(new EnumSerializer<Status>(BsonType.String));
             });
 
             return services;
