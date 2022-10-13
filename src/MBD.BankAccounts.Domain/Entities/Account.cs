@@ -13,7 +13,7 @@ namespace MBD.BankAccounts.Domain.Entities
 {
     public class Account : BaseEntityWithEvent, IAggregateRoot
     {
-        private readonly List<Transaction> _transactions = new List<Transaction>();
+        private List<Transaction> _transactions = new();
 
         public Guid TenantId { get; private set; }
         public string Description { get; private set; }

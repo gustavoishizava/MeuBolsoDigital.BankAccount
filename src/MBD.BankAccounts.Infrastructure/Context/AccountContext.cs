@@ -47,6 +47,7 @@ namespace MBD.BankAccounts.Infrastructure.Context
                 mapConfig.MapProperty(x => x.InitialBalance).SetElementName("initial_balance");
                 mapConfig.MapProperty(x => x.Type).SetElementName("type");
                 mapConfig.MapProperty(x => x.Status).SetElementName("status");
+                mapConfig.MapField("_transactions").SetShouldSerializeMethod(x => false);
             });
 
             modelBuilder.AddModelMap<Transaction>("transactions", mapConfig =>
