@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MeuBolsoDigital.CrossCutting.Extensions;
 using MeuBolsoDigital.IntegrationEventLog.Services;
 using MeuBolsoDigital.RabbitMQ;
 using Microsoft.Extensions.Configuration;
@@ -46,17 +45,14 @@ namespace MBD.BankAccounts.API.Workers
             using var scope = _serviceProvider.CreateScope();
             var integrationEventLogService = scope.ServiceProvider.GetService<IIntegrationEventLogService>();
 
-            var integrationEventLogs = await integrationEventLogService.RetrieveEventLogsPendingToPublishAsync();
-            if (integrationEventLogs.IsNullOrEmpty())
-                return;
-
             SetupExchange(cancellationToken);
 
-            foreach (var integrationEventLogEntry in integrationEventLogs)
+            var result = await integrationEventLogService.ProcessEventsAsync((integrationEventLogEntry) =>
             {
-                PublishMessage(integrationEventLogEntry.Content, integrationEventLogEntry.EventTypeName, cancellationToken);
-                await integrationEventLogService.SetEventToPublishedAsync(integrationEventLogEntry);
-            }
+                return Task.FromResult(PublishMessage(integrationEventLogEntry.Content, integrationEventLogEntry.EventTypeName, cancellationToken));
+            }, cancellationToken);
+
+            _logger.LogInformation($"{result} message(s) published.");
         }
 
         #region RabbitMQ
@@ -73,19 +69,29 @@ namespace MBD.BankAccounts.API.Workers
                 arguments: null);
         }
 
-        private void PublishMessage(string content, string routingKey, CancellationToken cancellationToken)
+        private bool PublishMessage(string content, string routingKey, CancellationToken cancellationToken)
         {
-            _rabbitMqConnection.TryConnect(cancellationToken);
+            try
+            {
+                _rabbitMqConnection.TryConnect(cancellationToken);
 
-            var messageBytes = Encoding.UTF8.GetBytes(content);
+                var messageBytes = Encoding.UTF8.GetBytes(content);
 
-            _rabbitMqConnection.Channel.BasicPublish(
-                exchange: _publicationTopic,
-                routingKey: routingKey,
-                basicProperties: null,
-                body: messageBytes);
+                _rabbitMqConnection.Channel.BasicPublish(
+                    exchange: _publicationTopic,
+                    routingKey: routingKey,
+                    basicProperties: null,
+                    body: messageBytes);
 
-            _logger.LogInformation("Published message.");
+                _logger.LogInformation("Published message.");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error on publish message.", ex);
+                return false;
+            }
         }
 
         #endregion

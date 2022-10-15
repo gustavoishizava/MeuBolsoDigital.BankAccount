@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -21,6 +22,27 @@ namespace MBD.BankAccounts.Infrastructure.Repositories
         public async Task AddAsync(IntegrationEventLogEntry integrationEventLogEntry)
         {
             await _context.IntegrationEventLogEntries.AddAsync(integrationEventLogEntry);
+        }
+
+        public async Task<IntegrationEventLogEntry> FindNextToPublishAsync()
+        {
+            var update = Builders<IntegrationEventLogEntry>.Update
+                            .Set(x => x.State, EventState.InProgress)
+                            .Set(x => x.UpdatedAt, DateTime.Now);
+
+            var filter = Builders<IntegrationEventLogEntry>.Filter.Where(x => x.State == EventState.NotPublished);
+
+            return await _context.IntegrationEventLogEntries.Collection.FindOneAndUpdateAsync(filter, update);
+        }
+
+        public Task ResetFailedAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task ResetInProgressAsync()
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<IEnumerable<IntegrationEventLogEntry>> RetrieveEventLogsPendingToPublishAsync()

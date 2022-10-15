@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using MBD.BankAccounts.API.Workers;
 using MeuBolsoDigital.IntegrationEventLog;
+using MeuBolsoDigital.IntegrationEventLog.Repositories;
 using MeuBolsoDigital.IntegrationEventLog.Services;
 using MeuBolsoDigital.RabbitMQ;
 using Microsoft.Extensions.Configuration;
@@ -26,8 +26,11 @@ namespace MBD.BankAccounts.UnitTests.API.Workers
         {
             _autoMocker = new AutoMocker();
 
+            var integrationLogService = _autoMocker.CreateInstance<IntegrationEventLogService>();
+            _autoMocker.Use<IIntegrationEventLogService>(integrationLogService);
+
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped<IIntegrationEventLogService>((_) => _autoMocker.GetMock<IIntegrationEventLogService>().Object);
+            serviceCollection.AddScoped<IIntegrationEventLogService>((_) => integrationLogService);
 
             _autoMocker.Use<IServiceProvider>(serviceCollection.BuildServiceProvider());
             _worker = _autoMocker.CreateInstance<FakeIntegrationEventWorker>();
@@ -51,41 +54,14 @@ namespace MBD.BankAccounts.UnitTests.API.Workers
         }
 
         [Fact]
-        public async Task StartProcessIntegrationEvent_NoHaveEvents_DoNothing()
-        {
-            // Arrange
-            _autoMocker.GetMock<IIntegrationEventLogService>()
-                .Setup(x => x.RetrieveEventLogsPendingToPublishAsync())
-                .ReturnsAsync(new List<IntegrationEventLogEntry>());
-
-            // Act
-            await _worker.StartProcessAsync();
-
-            // Assert
-            _autoMocker.GetMock<IIntegrationEventLogService>()
-                .Verify(x => x.RetrieveEventLogsPendingToPublishAsync(), Times.Once);
-
-            _autoMocker.GetMock<IRabbitMqConnection>()
-                .Verify(x => x.Channel.BasicPublish(It.IsAny<string>(),
-                                                    It.IsAny<string>(),
-                                                    It.IsAny<bool>(),
-                                                    It.IsAny<IBasicProperties>(),
-                                                    It.IsAny<ReadOnlyMemory<byte>>()), Times.Never);
-
-            _autoMocker.GetMock<IIntegrationEventLogService>()
-                .Verify(x => x.SetEventToPublishedAsync(It.IsAny<IntegrationEventLogEntry>()), Times.Never);
-        }
-
-        [Fact]
         public async Task StartProcessIntegrationEvent_HaveEvents_PublishMessages()
         {
             // Arrange
-            _autoMocker.GetMock<IIntegrationEventLogService>()
-                .Setup(x => x.RetrieveEventLogsPendingToPublishAsync())
-                .ReturnsAsync(new List<IntegrationEventLogEntry>()
-                {
-                    new("EventTypeName", JsonSerializer.Serialize(new FakeEvent { Id = 1 }))
-                });
+            _autoMocker.GetMock<IIntegrationEventLogRepository>()
+                .SetupSequence(x => x.FindNextToPublishAsync())
+                .ReturnsAsync(new IntegrationEventLogEntry("type", "content"))
+                .ReturnsAsync(new IntegrationEventLogEntry("type", "content"))
+                .ReturnsAsync((IntegrationEventLogEntry)null);
 
             _autoMocker.GetMock<IRabbitMqConnection>()
                 .Setup(x => x.Channel)
@@ -96,7 +72,7 @@ namespace MBD.BankAccounts.UnitTests.API.Workers
 
             // Assert
             _autoMocker.GetMock<IRabbitMqConnection>()
-                .Verify(x => x.TryConnect(It.IsAny<CancellationToken>()), Times.Exactly(2));
+                .Verify(x => x.TryConnect(It.IsAny<CancellationToken>()), Times.Exactly(3));
 
             _autoMocker.GetMock<IRabbitMqConnection>()
                 .Verify(x => x.Channel.ExchangeDeclare(It.IsAny<string>(),
@@ -105,18 +81,12 @@ namespace MBD.BankAccounts.UnitTests.API.Workers
                                                        It.IsAny<bool>(),
                                                        It.IsAny<IDictionary<string, object>>()), Times.Once);
 
-            _autoMocker.GetMock<IIntegrationEventLogService>()
-                .Verify(x => x.RetrieveEventLogsPendingToPublishAsync(), Times.Once);
-
             _autoMocker.GetMock<IRabbitMqConnection>()
                 .Verify(x => x.Channel.BasicPublish(It.IsAny<string>(),
                                                     It.IsAny<string>(),
                                                     It.IsAny<bool>(),
                                                     It.IsAny<IBasicProperties>(),
-                                                    It.IsAny<ReadOnlyMemory<byte>>()), Times.Once);
-
-            _autoMocker.GetMock<IIntegrationEventLogService>()
-                .Verify(x => x.SetEventToPublishedAsync(It.IsAny<IntegrationEventLogEntry>()), Times.Once);
+                                                    It.IsAny<ReadOnlyMemory<byte>>()), Times.Exactly(2));
         }
     }
 }
