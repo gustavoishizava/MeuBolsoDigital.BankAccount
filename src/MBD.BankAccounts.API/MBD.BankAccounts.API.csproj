@@ -13,6 +13,7 @@
     <PackageReference Include="MeuBolsoDigital.Application.Utils" Version="1.0.2"/>
     <PackageReference Include="MeuBolsoDigital.CrossCutting" Version="1.0.1"/>
     <PackageReference Include="MeuBolsoDigital.RabbitMQ" Version="1.0.7"/>
+    <PackageReference Include="NewRelic.Agent" Version="10.2.0"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MBD.BankAccounts.Infrastructure\MBD.BankAccounts.Infrastructure.csproj"/>
