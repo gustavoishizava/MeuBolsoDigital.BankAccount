@@ -52,7 +52,8 @@ namespace MBD.BankAccounts.API.Workers
                 return Task.FromResult(PublishMessage(integrationEventLogEntry.Content, integrationEventLogEntry.EventTypeName, cancellationToken));
             }, cancellationToken);
 
-            _logger.LogInformation($"{result} message(s) published.");
+            if (result > 0)
+                _logger.LogInformation($"{result} message(s) published.");
         }
 
         #region RabbitMQ
