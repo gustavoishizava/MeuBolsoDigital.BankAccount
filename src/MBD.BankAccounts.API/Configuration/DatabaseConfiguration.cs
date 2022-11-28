@@ -4,6 +4,7 @@ using MBD.BankAccounts.Domain.Entities.Common;
 using MBD.BankAccounts.Domain.Enumerations;
 using MBD.BankAccounts.Infrastructure.Context;
 using MBD.BankAccounts.Infrastructure.Context.CustomSerializers;
+using MBD.BankAccounts.Infrastructure.Context.Mappings;
 using MeuBolsoDigital.IntegrationEventLog;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,12 @@ namespace MBD.BankAccounts.API.Configuration
                 options.AddSerializer(new EnumSerializer<EventState>(BsonType.String));
                 options.AddSerializer(new EnumSerializer<AccountType>(BsonType.String));
                 options.AddSerializer(new EnumSerializer<Status>(BsonType.String));
+
+                options.AddBsonClassMap(new BaseEntityMapping());
+                options.AddBsonClassMap(new BaseEntityWithEventMapping());
+                options.AddBsonClassMap(new AccountMapping());
+                options.AddBsonClassMap(new TransactionMapping());
+                options.AddBsonClassMap(new IntegrationEventLogEntryMapping());
             });
 
             return services;
